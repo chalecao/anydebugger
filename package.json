@@ -17,6 +17,7 @@
   ],
   "author": "chalecao",
   "dependencies": {
+    "babel-runtime": "^6.26.0",
     "bopen": "^2.3.0",
     "chrome-devtools-frontend": "^1.0.576743",
     "engine.io-parser": "^2.1.2",
