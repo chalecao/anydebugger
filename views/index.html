@@ -1,0 +1,126 @@
+{% extends "base.html" %} {% block main %}
+<div class="container">
+    <div class="row">
+        <div class="input-group">
+
+            <input id="debug-url" type="text" class="form-control" aria-label="Amount (to the nearest dollar)" placeholder="请输入你要调试的页面url地址">
+            <span id="gen-qrcode" class="btn btn-info input-group-addon">生成二维码</span>
+            <!-- <span id="search" class="btn btn-success input-group-addon">搜索</span> -->
+        </div>
+    </div>
+    <div class="row find-pages" style="text-align:center; padding: 30px;">
+        <div id="qrcode" style="display: inline-block;"></div>
+        <div>
+            <a id="qrcode-url" target="_blank"> </a>
+        </div>
+        <br>
+
+    </div>
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">1. 页面添加 anydebugger.js 脚本代码</h3>
+                </div>
+                <div class="panel-body">
+                    <p>建议根据url参数动态加载脚本 - &lt;script src="anydebugger.js" &gt;&lt;/script&gt;
+                    </p>
+                    <br>
+                    <p>
+                        <a target="_blank" href="/intro">Read more</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">2. 打开页面</h3>
+                </div>
+                <div class="panel-body">
+                    <p>如果是电脑页面，请打开你要调试的页面，url地址后面加上参数 debugurl = xxx ; 如果是手机网页可以采用本站首页提供的
+                        <span style="color: red;">生成二维码</span> 服务，输入网页地址，系统会自动追加 debugurl 参数。</p>
+
+                    <p>
+                        <a target="_blank" href="/intro">Read more</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">3. 等待页面连接</h3>
+                </div>
+                <div class="panel-body">
+                    <p>打开页面后，稍等片刻，会自动匹配展示出连接到调试服务器的页面。单击列表上
+                        <span style="color: red;">对应页面</span> 即可打开调试页面。</p>
+                    <br>
+                    <p>
+                        <a target="_blank" href="/intro">Read more</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        document.querySelector("#gen-qrcode").addEventListener("click", function () {
+            document.getElementById("qrcode").innerHTML = ""
+            document.getElementById("qrcode-url").innerHTML = ""
+
+            let url = document.querySelector("#debug-url").value;
+            if (!url) return;
+            if (url.match(/\?/)) {
+                url += "&debugurl=" + location.host
+            } else {
+                url += "?debugurl=" + location.host
+            }
+
+            new QRCode(document.getElementById("qrcode"), url);  // 设置要生成二维码的链接
+            document.getElementById("qrcode-url").innerHTML = url
+            document.getElementById("qrcode-url").href = url
+        })
+        function findPage() {
+            let ourl = document.querySelector("#debug-url").value;
+            let url = ourl;
+            if (!url) return;
+            if (url.match(/\?/)) {
+                url += "&debugurl=" + location.host
+            } else {
+                url += "?debugurl=" + location.host
+            }
+            jQuery.get("http://" + location.host + "/json", {}, function (res) {
+                let pages = res.filter(function (item) { return item.url.match(ourl.split("?")[0]) })
+                $(".find-pages blockquote").remove()
+                pages && pages.forEach(function (page) {
+                    let date = new Date(page.metadata.timestamp)
+                    let time = ("0" + (date.getMonth() + 1)).substr(-2, 2) + "-" +
+                        ("0" + (date.getDate())).substr(-2, 2) + " "
+                        + ("0" + date.getHours()).substr(-2, 2) + ":"
+                        + ("0" + date.getMinutes()).substr(-2, 2) + ":"
+                        + ("0" + date.getSeconds()).substr(-2, 2)
+                    $(".find-pages").append(`
+                        <blockquote>
+                            <a class="debug-target" target="_blank" href="${page.localDevtoolsFrontendUrl}">(点我打开调试界面)    UserAgent： ${page.metadata.userAgent}</a>
+                            <footer class="page-title">${page.title}, 打开时间：${time}, 浏览器： ${page.metadata.vendor}, 操作系统：${page.metadata.platform}</footer>
+                        </blockquote>
+                    `)
+                })
+                if (!pages) {
+                    $(".find-pages").append(`
+                        <blockquote>
+                            没有检查到页面，请检查anydebugger.js是否引入，页面是否已打开。
+                        </blockquote>
+                    `)
+                }
+            })
+        }
+        // document.querySelector("#search").addEventListener("click", findPage)
+
+        setInterval(findPage, 5000)
+
+    </script>
+</div>
+{% endblock %}

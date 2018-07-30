@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block main %}
+<div class="container">
+
+    <h3>1. 页面添加 anydebugger.js 脚本代码</h3>
+    <pre>
+      &lt;script src="anydebugger.js"  &gt;&lt;/script&gt;
+    </pre>
+    <p>建议根据url参数动态加载上面的脚本。 </p>
+
+    <h3>2. 打开页面</h3>
+    <p>如果是电脑页面，请打开你要调试的页面，url地址后面加上参数 debugurl = <span class="debugurl"></span> ，指定调试服务器。 例如：</p>
+    <pre>
+      https://xxxx.page.com/?debugurl=xxx
+    </pre>
+    <p>如果是手机网页可以采用本站首页提供的 <span style="color: red;">生成二维码</span> 服务，输入网页地址，系统会自动追加 debugurl 参数。 然后用手机扫码打开页面。</p>
+
+    <h3>3. 等待页面列表</h3>
+    <p>打开页面后，稍等片刻，会自动匹配展示出连接到调试服务器的页面。单击列表上 <span style="color: red;">点我打开调试界面</span> 即可打开调试页面。</p>
+    <script>document.querySelector(".debugurl").innerHTML = location.host</script>
+</div>
+{% endblock %}
