@@ -15,7 +15,7 @@
   "keywords": [
     "web inspector"
   ],
-  "author": "",
+  "author": "chalecao",
   "dependencies": {
     "bopen": "^2.3.0",
     "chrome-devtools-frontend": "^1.0.576743",
