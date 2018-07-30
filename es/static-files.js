@@ -46,6 +46,8 @@ function staticFiles(url, dir) {
                             }
 
                             fp = _path2.default.join(dir, rpath.substring(url.length));
+                            // console.log(fp)
+
                             _context.next = 5;
                             return _fs2.default.exists(fp);
 

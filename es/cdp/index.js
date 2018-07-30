@@ -24,9 +24,9 @@ var _page = require('./page');
 
 var _page2 = _interopRequireDefault(_page);
 
-var _domains = require('./domains');
+var _index = require('./domains/index');
 
-var _domains2 = _interopRequireDefault(_domains);
+var _index2 = _interopRequireDefault(_index);
 
 var _request = require('./utils/request');
 
@@ -164,7 +164,7 @@ var CDPServer = function () {
                 /**
                  * also send target created event as they usually happen at the same time
                  */
-                _domains2.default.Target.targetCreated.call(page);
+                _index2.default.Target.targetCreated.call(page);
             }
 
             /**
@@ -206,8 +206,8 @@ var CDPServer = function () {
             /**
              * check if method has to be executed on serverside
              */
-            if (_domains2.default[domain] && typeof _domains2.default[domain][method] === 'function') {
-                var result = _domains2.default[domain][method].call(page, msg);
+            if (_index2.default[domain] && typeof _index2.default[domain][method] === 'function') {
+                var result = _index2.default[domain][method].call(page, msg);
 
                 /**
                  * some methods are async and broadcast their message on their own
@@ -267,7 +267,7 @@ var CDPServer = function () {
                 });
 
                 if (request.type === 'Stylesheet') {
-                    _domains2.default.Network.getResponseBodyData.call(page, {
+                    _index2.default.Network.getResponseBodyData.call(page, {
                         params: { requestId: request.requestId }
                     }).then(function (result) {
                         var hasRegisteredStyle = Boolean(page.cssContent.find(function (_ref2) {
@@ -310,7 +310,7 @@ var CDPServer = function () {
             });
 
             newRequest.catch(function (error) {
-                _domains2.default.Log.entryAdded.call(page, request, error);
+                _index2.default.Log.entryAdded.call(page, request, error);
 
                 return page.send({
                     method: 'Network.loadingFailed',
