@@ -93,14 +93,14 @@ function createApp(port) {
         };
     }());
 
-    app.use((0, _staticFiles2.default)('/app/', "/node_modules/chrome-devtools-frontend/front_end/"));
-    app.use((0, _staticFiles2.default)('/static/', "/static/"));
+    app.use((0, _staticFiles2.default)('/app/', "/../node_modules/chrome-devtools-frontend/front_end/"));
+    app.use((0, _staticFiles2.default)('/static/', "/../static/"));
 
     // parse request body:
     app.use((0, _koaBodyparser2.default)());
 
     // add nunjucks as view:
-    app.use((0, _templating2.default)('views', {
+    app.use((0, _templating2.default)(__dirname + '/../views', {
         noCache: !isProduction,
         watch: !isProduction
     }));

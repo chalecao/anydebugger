@@ -45,7 +45,7 @@ function staticFiles(url, dir) {
                                 break;
                             }
 
-                            fp = process.cwd() + dir + rpath.substring(url.length);
+                            fp = __dirname + dir + rpath.substring(url.length);
 
                             console.log(fp);
                             _context.next = 6;
