@@ -32,8 +32,15 @@ _opts2.default.parse([{
     description: "Specify the port",
     value: true,
     required: false
+}, {
+    short: "s",
+    long: "slient",
+    description: "start silently, will not open browser.",
+    value: true,
+    required: false
 }], true);
 
 var port = _opts2.default.get('port') || 8888;
+var slient = _opts2.default.get('slient') || false;
 
-(0, _app2.default)(port);
+(0, _app2.default)(port, slient);

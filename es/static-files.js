@@ -41,43 +41,43 @@ function staticFiles(url, dir) {
                             rpath = ctx.request.path;
 
                             if (!rpath.startsWith(url)) {
-                                _context.next = 16;
+                                _context.next = 15;
                                 break;
                             }
 
                             fp = __dirname + dir + rpath.substring(url.length);
+                            // console.log(fp)
 
-                            console.log(fp);
-                            _context.next = 6;
+                            _context.next = 5;
                             return _fs2.default.exists(fp);
 
-                        case 6:
+                        case 5:
                             if (!_context.sent) {
-                                _context.next = 13;
+                                _context.next = 12;
                                 break;
                             }
 
                             ctx.response.type = _mime2.default.lookup(rpath);
-                            _context.next = 10;
+                            _context.next = 9;
                             return _fs2.default.readFile(fp);
 
-                        case 10:
+                        case 9:
                             ctx.response.body = _context.sent;
-                            _context.next = 14;
+                            _context.next = 13;
                             break;
 
-                        case 13:
+                        case 12:
                             ctx.response.status = 404;
 
-                        case 14:
-                            _context.next = 18;
+                        case 13:
+                            _context.next = 17;
                             break;
 
-                        case 16:
-                            _context.next = 18;
+                        case 15:
+                            _context.next = 17;
                             return next();
 
-                        case 18:
+                        case 17:
                         case 'end':
                             return _context.stop();
                     }

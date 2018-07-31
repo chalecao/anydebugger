@@ -56,7 +56,7 @@ var _staticFiles2 = _interopRequireDefault(_staticFiles);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function createApp(port) {
+function createApp(port, slient) {
     var _this = this;
 
     var app = new _koa2.default();
@@ -134,7 +134,7 @@ function createApp(port) {
     server.listen(port);
     log.info('app started at port ' + port + '...');
     // Open URL in default browser
-    (0, _bopen2.default)('http://127.0.0.1:' + port);
+    !slient && (0, _bopen2.default)('http://127.0.0.1:' + port);
 }
 // static file support:
 module.exports = exports['default'];
