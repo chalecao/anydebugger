@@ -9,8 +9,8 @@
   },
   "scripts": {
     "babel": "babel src/ -d es/",
-    "server": "node --use_strict es/server.js",
-    "start": "npm run build && npm run server --debug"
+    "server": "node --use_strict es/bin.js",
+    "start": "npm run babel && npm run server --debug"
   },
   "keywords": [
     "web inspector"

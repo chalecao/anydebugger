@@ -93,8 +93,8 @@ function createApp(port) {
         };
     }());
 
-    app.use((0, _staticFiles2.default)('/app/', __dirname + "/../node_modules/chrome-devtools-frontend/front_end/"));
-    app.use((0, _staticFiles2.default)('/static/', __dirname + "/../static/"));
+    app.use((0, _staticFiles2.default)('/app/', "/node_modules/chrome-devtools-frontend/front_end/"));
+    app.use((0, _staticFiles2.default)('/static/', "/static/"));
 
     // parse request body:
     app.use((0, _koaBodyparser2.default)());
