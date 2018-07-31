@@ -25,7 +25,8 @@
                     <h3 class="panel-title">1. 页面添加 anydebugger.js 脚本代码</h3>
                 </div>
                 <div class="panel-body">
-                    <p>下载<a href="/static/js/anydebugger.js" download="anydebugger.js" target="_blank">anydebugger.js</a>, 建议根据url参数动态加载脚本 - &lt;script src="anydebugger.js" &gt;&lt;/script&gt; , 保证开启debug模式时尽可能早加载本脚本。
+                    <p>下载
+                        <a href="/static/js/anydebugger.js" download="anydebugger.js" target="_blank">anydebugger.js</a>, 建议根据url参数动态加载脚本 - &lt;script src="anydebugger.js" &gt;&lt;/script&gt; , 保证开启debug模式时尽可能早加载本脚本。
                     </p>
                     <br>
                     <p>
@@ -92,7 +93,8 @@
                 url += "?debugurl=" + location.host
             }
             jQuery.get("http://" + location.host + "/json", {}, function (res) {
-                let pages = res.filter(function (item) { return item.url.match(ourl.split("?")[0]) })
+                // let pages = res.filter(function (item) { return item.url.match(ourl.split("?")[0]) })
+                let pages = res;
                 $(".find-pages blockquote").remove()
                 pages && pages.forEach(function (page) {
                     let date = new Date(page.metadata.timestamp)
