@@ -67,6 +67,23 @@
         </div>
     </div>
     <script type="text/javascript">
+        function parseParam(hashOrSearch) {
+            //location.hash中获取数据，因为手机淘宝扫码后会在location.search中插入一些数据
+            let _search = hashOrSearch.split("?");
+            let _result = {};
+            if (_search[1]) {
+                _search[1].split("&").forEach((item) => {
+                    if (item.split("=")[1] && item.split("=")[1] != 'undefined')
+                        _result[item.split("=")[0]] = item.split("=")[1];
+                })
+            }
+            return _result;
+        }
+
+        let param = parseParam(location.search);
+        if (param.url) {
+            $("#debug-url").val(param.url);
+        }
         document.querySelector("#gen-qrcode").addEventListener("click", function () {
             document.getElementById("qrcode").innerHTML = ""
             document.getElementById("qrcode-url").innerHTML = ""
@@ -85,14 +102,7 @@
         })
         let pages = []
         function findPage() {
-            let ourl = document.querySelector("#debug-url").value;
-            let url = ourl;
-            // if (!url) return;
-            if (url.match(/\?/)) {
-                url += "&debugurl=" + location.host
-            } else {
-                url += "?debugurl=" + location.host
-            }
+
             jQuery.get("http://" + location.host + "/json", {}, function (res) {
                 // let pages = res.filter(function (item) { return item.url.match(ourl.split("?")[0]) })
                 let pages = res;
