@@ -83,10 +83,11 @@
             document.getElementById("qrcode-url").innerHTML = url
             document.getElementById("qrcode-url").href = url
         })
+        let pages = []
         function findPage() {
             let ourl = document.querySelector("#debug-url").value;
             let url = ourl;
-            if (!url) return;
+            // if (!url) return;
             if (url.match(/\?/)) {
                 url += "&debugurl=" + location.host
             } else {
@@ -95,22 +96,23 @@
             jQuery.get("http://" + location.host + "/json", {}, function (res) {
                 // let pages = res.filter(function (item) { return item.url.match(ourl.split("?")[0]) })
                 let pages = res;
-                $(".find-pages blockquote").remove()
-                pages && pages.forEach(function (page) {
-                    let date = new Date(page.metadata.timestamp)
-                    let time = ("0" + (date.getMonth() + 1)).substr(-2, 2) + "-" +
-                        ("0" + (date.getDate())).substr(-2, 2) + " "
-                        + ("0" + date.getHours()).substr(-2, 2) + ":"
-                        + ("0" + date.getMinutes()).substr(-2, 2) + ":"
-                        + ("0" + date.getSeconds()).substr(-2, 2)
-                    $(".find-pages").append(`
-                        <blockquote>
+                if (pages) {
+                    $(".find-pages blockquote").remove()
+                    pages.forEach(function (page) {
+                        let date = new Date(page.metadata.timestamp)
+                        let time = ("0" + (date.getMonth() + 1)).substr(-2, 2) + "-" +
+                            ("0" + (date.getDate())).substr(-2, 2) + " "
+                            + ("0" + date.getHours()).substr(-2, 2) + ":"
+                            + ("0" + date.getMinutes()).substr(-2, 2) + ":"
+                            + ("0" + date.getSeconds()).substr(-2, 2)
+                        $(".find-pages").append(`
+                        <blockquote >
                             <a class="debug-target" target="_blank" href="${page.localDevtoolsFrontendUrl}">(点我打开调试界面)    UserAgent： ${page.metadata.userAgent}</a>
                             <footer class="page-title">${page.title}, 打开时间：${time}, 浏览器： ${page.metadata.vendor}, 操作系统：${page.metadata.platform}</footer>
                         </blockquote>
                     `)
-                })
-                if (!pages) {
+                    })
+                } else {
                     $(".find-pages").append(`
                         <blockquote>
                             没有检查到页面，请检查anydebugger.js是否引入，页面是否已打开。
