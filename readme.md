@@ -7,6 +7,8 @@ npm install anydebugger -g
 
 anydebugger -v //see version
 
+anydebugger //start debug
+
 anydebugger -p 9000 //start debug
 ```
 then it will open your default browser antomatically, you can follow the web guide.

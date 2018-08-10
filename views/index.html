@@ -26,7 +26,7 @@
                 </div>
                 <div class="panel-body">
                     <p>下载
-                        <a href="/static/js/anydebugger.js" download="anydebugger.js" target="_blank">anydebugger.js</a>, 建议根据url参数动态加载脚本 - &lt;script src="anydebugger.js" &gt;&lt;/script&gt; , 保证开启debug模式时尽可能早加载本脚本。
+                        <a href="/static/js/anydebugger.js" download="anydebugger.js" target="_blank">anydebugger.js</a>添加到页面, 也可以使用debug服务链接 - &lt;script src="<span class="anydebuggerUrl"></span>" &gt;&lt;/script&gt; , 开启debug模式时尽可能早加载该脚本。
                     </p>
                     <br>
                     <p>
@@ -41,8 +41,9 @@
                     <h3 class="panel-title">2. 打开页面</h3>
                 </div>
                 <div class="panel-body">
-                    <p>如果是电脑页面，请打开你要调试的页面，url地址后面加上参数 debugurl = xxx ; 如果是手机网页可以采用本站首页提供的
-                        <span style="color: red;">生成二维码</span> 服务，输入网页地址，系统会自动追加 debugurl 参数。</p>
+                    <p>打开你要调试的页面，如果通过debug服务引入的url地址, 跳过。否则需要在页面url后面加上参数 debugurl =
+                        <span class="debugurl"></span> ; 可以采用首页提供的
+                        <span style="color: red;">生成二维码</span> 服务，输入要访问的url，系统会自动追加 debugurl 参数。</p>
 
                     <p>
                         <a target="_blank" href="/intro">Read more</a>
@@ -56,8 +57,8 @@
                     <h3 class="panel-title">3. 等待页面连接</h3>
                 </div>
                 <div class="panel-body">
-                    <p>打开页面后，稍等片刻，会自动匹配展示出连接到调试服务器的页面。单击列表上
-                        <span style="color: red;">对应页面</span> 即可打开调试页面。</p>
+                    <p>打开目标页面后，稍等片刻，本页面会自动展示出连接到调试服务器的所有页面，并给出客户端相关信息。单击
+                        <span style="color: red;">对应页面</span> 即可打开Chrome Devtools调试页面。如果连接不上，请重新打开目标页面。</p>
                     <br>
                     <p>
                         <a target="_blank" href="/intro">Read more</a>
@@ -67,6 +68,8 @@
         </div>
     </div>
     <script type="text/javascript">
+        jQuery(".anydebuggerUrl").html("//" + location.host + "/static/js/anydebugger.js");
+        jQuery(".debugurl").html(location.host);
         function parseParam(hashOrSearch) {
             //location.hash中获取数据，因为手机淘宝扫码后会在location.search中插入一些数据
             let _search = hashOrSearch.split("?");
