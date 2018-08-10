@@ -105,7 +105,8 @@ var Page = function (_EventEmitter) {
         _this.domains = [];
         _this.buffer = [];
         _this.cssContent = [];
-        // switch channel
+
+        // switch channel for web inspector client connect
         _this.io = io.of('/page/' + _this.uuid);
         _this.io.on('connection', _this.connect.bind(_this));
 
@@ -115,7 +116,6 @@ var Page = function (_EventEmitter) {
         });
         return _this;
     }
-
     /**
      * Connect to web-inspector-client 
      */
@@ -126,7 +126,7 @@ var Page = function (_EventEmitter) {
         value: function connect(socket) {
             var _this2 = this;
 
-            this.log.warn('Connected to web-inspector-client with page id ' + this.uuid);
+            this.log.warn('Connected by web-inspector-client with page id ' + this.uuid);
 
             this.socket = socket;
             this.socket.on('result', this.send.bind(this));

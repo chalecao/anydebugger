@@ -4,6 +4,10 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
 var _getIterator2 = require('babel-runtime/core-js/get-iterator');
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
@@ -36,6 +40,8 @@ var _logger = require('../logger');
 
 var _logger2 = _interopRequireDefault(_logger);
 
+var _utils = require('../utils');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -49,6 +55,8 @@ var CDPServer = function () {
         this.io = io;
         this.log = (0, _logger2.default)('CDP Server');
         this.pages = [];
+        // switch channel for anydebugger web page connect
+        this.jsonio = io.of('/json');
     }
 
     //web socket protocol, when server setUp, the web-inspector-client will connect and establish a ws connect
@@ -105,6 +113,21 @@ var CDPServer = function () {
 
                 page = new _page2.default(this.io, params.uuid, params.hostname, _url2.default.parse(params.url), params.title, params.description, params.metadata);
                 this.pages.push(page);
+                // emit all page to anydebugger web page
+                this.jsonio.emit('json', (0, _stringify2.default)(this.pages.map(function (page) {
+                    var devtoolsPath = page.hostname + '/inspect/' + page.uuid;
+                    var title = page.title || (0, _utils.getDomain)(page.url);
+                    return {
+                        description: page.description,
+                        devtoolsFrontendUrl: 'http://chrome-devtools-frontend.appspot.com/serve_rev/@a000f5daeaac3f79102a0c8f6eaab57aa0e00ae9/inspector.html?ws=' + devtoolsPath,
+                        localDevtoolsFrontendUrl: 'http://' + page.hostname + '/app/inspector.html?ws=' + devtoolsPath,
+                        title: title,
+                        type: 'page',
+                        url: page.url.href,
+                        metadata: page.metadata,
+                        webSocketDebuggerUrl: 'ws://' + devtoolsPath
+                    };
+                })));
 
                 /**
                  * remove page if disconnected from devtools frontend
@@ -206,18 +229,18 @@ var CDPServer = function () {
             /**
              * check if method has to be executed on serverside
              */
-            if (_index2.default[domain] && typeof _index2.default[domain][method] === 'function') {
-                var result = _index2.default[domain][method].call(page, msg);
+            // if (domains[domain] && typeof domains[domain][method] === 'function') {
+            //     let result = domains[domain][method].call(page, msg)
 
-                /**
-                 * some methods are async and broadcast their message on their own
-                 */
-                if (!result) {
-                    return;
-                }
+            //     /**
+            //      * some methods are async and broadcast their message on their own
+            //      */
+            //     if (!result) {
+            //         return
+            //     }
 
-                return page.send({ id: msg.id, result: result });
-            }
+            //     return page.send({ id: msg.id, result })
+            // }
 
             /**
              * if not handled on server side sent command to device
@@ -230,10 +253,6 @@ var CDPServer = function () {
             var _this2 = this;
 
             var request = new _request2.default(req);
-
-            if (request.fullUrl.includes('samsungcloudsolution')) {
-                return;
-            }
 
             page.requestList.push(request);
 
