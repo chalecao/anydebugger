@@ -165,7 +165,7 @@ var Page = function (_EventEmitter) {
         }
 
         /**
-         * Disconnect from device (TV)
+         * Disconnect from device
          */
 
     }, {

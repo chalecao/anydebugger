@@ -113,21 +113,7 @@ var CDPServer = function () {
 
                 page = new _page2.default(this.io, params.uuid, params.hostname, _url2.default.parse(params.url), params.title, params.description, params.metadata);
                 this.pages.push(page);
-                // emit all page to anydebugger web page
-                this.jsonio.emit('json', (0, _stringify2.default)(this.pages.map(function (page) {
-                    var devtoolsPath = page.hostname + '/inspect/' + page.uuid;
-                    var title = page.title || (0, _utils.getDomain)(page.url);
-                    return {
-                        description: page.description,
-                        devtoolsFrontendUrl: 'http://chrome-devtools-frontend.appspot.com/serve_rev/@a000f5daeaac3f79102a0c8f6eaab57aa0e00ae9/inspector.html?ws=' + devtoolsPath,
-                        localDevtoolsFrontendUrl: 'http://' + page.hostname + '/app/inspector.html?ws=' + devtoolsPath,
-                        title: title,
-                        type: 'page',
-                        url: page.url.href,
-                        metadata: page.metadata,
-                        webSocketDebuggerUrl: 'ws://' + devtoolsPath
-                    };
-                })));
+                this.emitPage();
 
                 /**
                  * remove page if disconnected from devtools frontend
@@ -156,6 +142,25 @@ var CDPServer = function () {
             return page;
         }
     }, {
+        key: 'emitPage',
+        value: function emitPage() {
+            // emit all page to anydebugger web page
+            this.jsonio.emit('json', (0, _stringify2.default)(this.pages.map(function (page) {
+                var devtoolsPath = page.hostname + '/inspect/' + page.uuid;
+                var title = page.title || (0, _utils.getDomain)(page.url);
+                return {
+                    description: page.description,
+                    devtoolsFrontendUrl: 'http://chrome-devtools-frontend.appspot.com/serve_rev/@a000f5daeaac3f79102a0c8f6eaab57aa0e00ae9/inspector.html?ws=' + devtoolsPath,
+                    localDevtoolsFrontendUrl: 'http://' + page.hostname + '/app/inspector.html?ws=' + devtoolsPath,
+                    title: title,
+                    type: 'page',
+                    url: page.url.href,
+                    metadata: page.metadata,
+                    webSocketDebuggerUrl: 'ws://' + devtoolsPath
+                };
+            })));
+        }
+    }, {
         key: 'removePage',
         value: function removePage(uuid) {
             var deletedPages = this.pages.splice(this.pages.findIndex(function (page) {
@@ -168,6 +173,7 @@ var CDPServer = function () {
             for (var i = 0; i < deletedPages.length; ++i) {
                 delete deletedPages[i];
             }
+            this.emitPage();
         }
     }, {
         key: 'domainEnabled',
