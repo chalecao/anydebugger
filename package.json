@@ -1,6 +1,6 @@
 {
   "name": "anydebugger",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "anydebugger enable you debug you web pages anywhere via Chrome Devtool with Chrome Devtools Protocol supported partially",
   "main": "es/app.js",
   "js:next": "es/app.js",
