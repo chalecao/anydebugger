@@ -411,6 +411,9 @@ var Page = function (_EventEmitter) {
 
             delete msg._domain;
             delete msg._method;
+            if (msg.result && msg.result.body) {
+                msg.result.body = decodeURIComponent(msg.result.body);
+            }
 
             var msgString = (0, _stringify2.default)(msg);
             this.log.debug('message from web-inspector-client to ws: ' + msgString.slice(0, 1000));
