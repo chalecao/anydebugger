@@ -88,7 +88,7 @@
         if (param.url) {
             $("#debug-url").val(param.url);
         }
-        document.querySelector("#gen-qrcode").addEventListener("click", function () {
+        function genQrcode() {
             document.getElementById("qrcode").innerHTML = ""
             document.getElementById("qrcode-url").innerHTML = ""
 
@@ -103,7 +103,8 @@
             new QRCode(document.getElementById("qrcode"), url);  // 设置要生成二维码的链接
             document.getElementById("qrcode-url").innerHTML = url
             document.getElementById("qrcode-url").href = url
-        })
+        }
+        document.querySelector("#gen-qrcode").addEventListener("click", genQrcode)
         function findPage(pages) {
             if (pages) {
                 $(".find-pages blockquote").remove()
@@ -133,6 +134,8 @@
         socket.on('json', function (data) {
             findPage(JSON.parse(data));
         });
+
+        setTimeout(genQrcode(), 300)
 
     </script>
 </div>
