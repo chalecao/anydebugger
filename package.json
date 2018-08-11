@@ -1,5 +1,5 @@
 {
-  "name": "anydebugger",
+  "name": "adev",
   "version": "2.0.1",
   "description": "anydebugger enable you debug you web pages anywhere via Chrome Devtool with Chrome Devtools Protocol supported partially",
   "main": "es/app.js",
@@ -13,9 +13,9 @@
     "start": "npm run babel && npm run server --debug"
   },
   "keywords": [
-    "web inspector"
+    "web debugger, mock data"
   ],
-  "author": "chalecao",
+  "author": "haomou(haomou@alibaba-inc.com)",
   "dependencies": {
     "babel-runtime": "^6.26.0",
     "bopen": "^2.3.0",
