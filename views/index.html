@@ -72,7 +72,6 @@
         jQuery(".anydebuggerUrl").html("//" + location.host + "/static/js/anydebugger.js");
         jQuery(".debugurl").html(location.host);
         function parseParam(hashOrSearch) {
-            //location.hash中获取数据，因为手机淘宝扫码后会在location.search中插入一些数据
             let _search = hashOrSearch.split("?");
             let _result = {};
             if (_search[1]) {
