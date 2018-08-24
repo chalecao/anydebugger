@@ -1,14 +1,12 @@
 {% extends "base.html" %} {% block main %}
 <style>
-    .frameset {
-        display: none;
-    }
 
     .simulator {
         line-height: 50px;
         display: none;
     }
 </style>
+
 <div class="container">
     <div class="row">
         <div class="input-group">
@@ -110,7 +108,7 @@
             $(".simulator-button").on("click", function (e) {
                 let open = $(".simulator-button")[0].checked;
                 if (open) {
-                    document.documentElement.innerHTML = `<frameset id="frameset" cols="30%, 70%" framespacing="5" border="1" bordercolor="#d6d5d6"><frame id="right-inspector" src="${param.simulator}" scrolling="no" marginwidth="0px" marginheight="0px"></frame><frame id="right-inspector" src="${location.href + "&simulatorOn=1"}" scrolling="no" marginwidth="0px" marginheight="0px"></frame></frameset>`;
+                    document.documentElement.innerHTML = `<frameset id="frameset" cols="30%, 70%" framespacing="5" border="1" bordercolor="#d6d5d6"><frame id="right-inspector" src="${param.simulator}" scrolling="yes" marginwidth="0px" marginheight="0px"></frame><frame id="right-inspector" src="${location.href + "&simulatorOn=1"}" scrolling="yes" marginwidth="0px" marginheight="0px"></frame></frameset>`;
                 } else {
                     window.parent.location.href = window.parent.location.href.replace("&simulatorOn=1", "")
                 }
@@ -148,14 +146,13 @@
                         + ("0" + date.getSeconds()).substr(-2, 2)
                     $(".find-pages").append(`
                         <blockquote >
-                            <a class="debug-target"  ${!param.simulator ? 'target="_blank"' : ""} href="${page.devtoolsFrontendUrl}">(点我打开调试界面)    UserAgent： ${page.metadata.userAgent}</a>
+                            <a class="debug-target"  ${!param.simulatorOn ? 'target="_blank"' : ''} href="${page.localDevtoolsFrontendUrl}">(点我打开调试界面)    UserAgent： ${page.metadata.userAgent}</a>
                             <footer class="page-title">${page.title}, 打开时间：${time}, 浏览器： ${page.metadata.vendor}, 操作系统：${page.metadata.platform}</footer>
                         </blockquote>
                     `)
                 })
                 if (param.simulator) {
                     $(".debug-target").on("click", function (evt) {
-
 
                     })
                 }

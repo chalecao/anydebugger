@@ -131,6 +131,7 @@ var CDPServer = function () {
             } else {
                 this.log.info('Page with uuid "' + params.uuid + '" already exists');
                 page = registeredPage;
+                this.emitPage();
             }
 
             /**
