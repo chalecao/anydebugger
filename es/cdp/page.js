@@ -201,6 +201,8 @@ var Page = function (_EventEmitter) {
                  */
                 _this3.io.removeAllListeners();
                 delete _this3.socket;
+                delete _this3.ws;
+                _this3.buffer = [];
 
                 return _this3.emit('disconnect', _this3.uuid);
             }, 5000);

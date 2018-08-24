@@ -1,5 +1,5 @@
 ## anydebugger
-anydebugger enable you debug you web pages anywhere via Chrome Devtool with Chrome Devtools Protocol supported partially. But, we will support Network & JavaScript Debug soon!
+anydebugger enable you debug you web pages anywhere via Chrome Devtool with Chrome Devtools Protocol supported partially. we will support JavaScript Debug soon!
 
 ## usage
 ```

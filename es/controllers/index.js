@@ -60,6 +60,28 @@ exports.default = {
         return function GETIntro(_x3, _x4) {
             return _ref2.apply(this, arguments);
         };
+    }(),
+    'GET /debug': function () {
+        var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(ctx, next) {
+            return _regenerator2.default.wrap(function _callee3$(_context3) {
+                while (1) {
+                    switch (_context3.prev = _context3.next) {
+                        case 0:
+                            ctx.render('debug.html', {
+                                title: 'debug you page'
+                            });
+
+                        case 1:
+                        case 'end':
+                            return _context3.stop();
+                    }
+                }
+            }, _callee3, undefined);
+        }));
+
+        return function GETDebug(_x5, _x6) {
+            return _ref3.apply(this, arguments);
+        };
     }()
 };
 module.exports = exports['default'];

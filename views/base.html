@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="Inspect Pages AnyWhere, Tmall Chaoshi inc.">
     <title>{{ title }}</title>
     <link rel="stylesheet" href="/static/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/switcher.css">
     <script src="/static/js/socket.io.min.js"></script>
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="/static/js/qrcode.min.js"></script>
+    <script src="/static/js/jquery.switcher.js"></script>
 </head>
+
 <body>
     <header class="navbar navbar-static-top">
         <div class="container">
@@ -21,11 +25,15 @@
                 <ul class="nav navbar-nav">
                     <li><a target="_blank" href="/intro">使用说明</a></li>
                 </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="simulator">开启云真机：</li>
+                </ul>
             </nav>
+
         </div>
     </header>
     {% block main %} {% endblock %}
-    <footer style="text-align:center; bottom: 10px; position:absolute;width: 100%;">
+    <footer style="text-align:center; margin-bottom: 10px; position:absolute;width: 100%;">
         Any Debugger - debug your web page anywhere!
     </footer>
 </body>

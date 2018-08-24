@@ -1,22 +1,36 @@
 {% extends "base.html" %} {% block main %}
+<style>
+    .frameset {
+        display: none;
+    }
+
+    .simulator {
+        line-height: 50px;
+        display: none;
+    }
+</style>
 <div class="container">
     <div class="row">
         <div class="input-group">
 
             <input id="debug-url" type="text" class="form-control" aria-label="Amount (to the nearest dollar)" placeholder="请输入你要调试的页面url地址">
             <span id="gen-qrcode" class="btn btn-info input-group-addon">生成二维码</span>
+
             <!-- <span id="search" class="btn btn-success input-group-addon">搜索</span> -->
         </div>
     </div>
-    <div class="row find-pages" style="text-align:center; padding: 30px;">
+    <div class="row" style="text-align:center; padding: 30px;">
         <div id="qrcode" style="display: inline-block;"></div>
         <div>
             <a id="qrcode-url" target="_blank"> </a>
         </div>
-        <br>
-
     </div>
-    <br>
+    <h2>可调式列表：</h2>
+    <div class="row find-pages">
+        <blockquote>
+            没有检查到页面，请检查debugurl是否正确 或者 要调试页面是否已打开。
+        </blockquote>
+    </div>
     <br>
     <div class="row">
         <div class="col-md-4">
@@ -26,7 +40,8 @@
                 </div>
                 <div class="panel-body">
                     <p>下载
-                        <a href="/static/js/anydebugger.js" download="anydebugger.js" target="_blank">anydebugger.js</a>添加到页面, 也可以使用debug服务链接 - &lt;script src="
+                        <a href="/static/js/anydebugger.js" download="anydebugger.js" target="_blank">anydebugger.js</a>添加到页面,
+                        也可以使用debug服务链接 - &lt;script src="
                         <span class="anydebuggerUrl"></span>" &gt;&lt;/script&gt; , 开启debug模式时尽可能早加载该脚本。
                     </p>
                     <br>
@@ -71,6 +86,7 @@
     <script type="text/javascript">
         jQuery(".anydebuggerUrl").html("//" + location.host + "/static/js/anydebugger.js");
         jQuery(".debugurl").html(location.host);
+
         function parseParam(hashOrSearch) {
             let _search = hashOrSearch.split("?");
             let _result = {};
@@ -83,9 +99,25 @@
             return _result;
         }
 
-        let param = parseParam(location.search);
+        let param = parseParam(location.href);
         if (param.url) {
             $("#debug-url").val(param.url);
+        }
+
+        if (param.simulator) {
+            $(".simulator").append(`<input class="simulator-button" type="checkbox" value="1" ${param.simulatorOn ? "checked" : ""}>`).show()
+            $.switcher("input[type=checkbox]")
+            $(".simulator-button").on("click", function (e) {
+                let open = $(".simulator-button")[0].checked;
+                if (open) {
+                    document.documentElement.innerHTML = `<frameset id="frameset" cols="30%, 70%" framespacing="5" border="1" bordercolor="#d6d5d6"><frame id="right-inspector" src="${param.simulator}" scrolling="no" marginwidth="0px" marginheight="0px"></frame><frame id="right-inspector" src="${location.href + "&simulatorOn=1"}" scrolling="no" marginwidth="0px" marginheight="0px"></frame></frameset>`;
+                } else {
+                    window.parent.location.href = window.parent.location.href.replace("&simulatorOn=1", "")
+                }
+            })
+
+        } else {
+            $(".simulator").hide()
         }
         function genQrcode() {
             document.getElementById("qrcode").innerHTML = ""
@@ -116,11 +148,17 @@
                         + ("0" + date.getSeconds()).substr(-2, 2)
                     $(".find-pages").append(`
                         <blockquote >
-                            <a class="debug-target" target="_blank" href="${page.localDevtoolsFrontendUrl}">(点我打开调试界面)    UserAgent： ${page.metadata.userAgent}</a>
+                            <a class="debug-target"  ${!param.simulator ? 'target="_blank"' : ""} href="${page.devtoolsFrontendUrl}">(点我打开调试界面)    UserAgent： ${page.metadata.userAgent}</a>
                             <footer class="page-title">${page.title}, 打开时间：${time}, 浏览器： ${page.metadata.vendor}, 操作系统：${page.metadata.platform}</footer>
                         </blockquote>
                     `)
                 })
+                if (param.simulator) {
+                    $(".debug-target").on("click", function (evt) {
+
+
+                    })
+                }
             } else {
                 $(".find-pages").append(`
                         <blockquote>
@@ -133,9 +171,8 @@
         socket.on('json', function (data) {
             findPage(JSON.parse(data));
         });
-
         setTimeout(genQrcode(), 300)
-
     </script>
+
 </div>
 {% endblock %}
