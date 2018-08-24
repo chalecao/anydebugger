@@ -103,11 +103,10 @@ var CDPServer = function () {
         value: function addPage(params) {
             var _this = this;
 
-            var page = void 0;
             var registeredPage = this.pages.find(function (page) {
-                return page.uuid === params.uuid;
+                return page.uuid == params.uuid;
             });
-
+            var page = {};
             if (!registeredPage) {
                 this.log.info('Create a new page with uuid "' + params.uuid + '"');
 
