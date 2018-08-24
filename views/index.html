@@ -108,6 +108,14 @@
                 let open = $(".simulator-button")[0].checked;
                 if (open) {
                     document.documentElement.innerHTML = `<frameset id="frameset" cols="30%, 70%" framespacing="5" border="1" bordercolor="#d6d5d6"><frame id="right-inspector" src="${param.simulator}" scrolling="yes" marginwidth="0px" marginheight="0px"></frame><frame id="right-inspector" src="${location.href + "&simulatorOn=1"}" scrolling="yes" marginwidth="0px" marginheight="0px"></frame></frameset>`;
+                    $(document.documentElement).append(`<div class='oper-box' style='position: fixed;right: 0;top: 0;background: rgba(0, 0, 0, 0.2);border-radius: 3px;'><span title='back' class="back" style='cursor:pointer;padding: 0 5px;background: orange;border-radius: 3px;margin: 5px 5px;color: #fff;display:inline-block;'>&larr;</span><span class="refresh" style='cursor:pointer;padding: 0 5px;background: orange;border-radius: 3px;margin: 5px 5px;color: #fff;display:inline-block;' title='refresh'>&dagger;</span></div>`)
+                    $(".oper-box>.back").on("click", function () {
+                        $("frame")[1].contentWindow.history.go(-1);
+                    })
+                    $(".oper-box>.refresh").on("click", function () {
+                        $("frame")[1].contentWindow.location.reload();
+                    })
+
                 } else {
                     window.parent.location.href = window.parent.location.href.replace("&simulatorOn=1", "")
                 }
