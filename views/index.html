@@ -1,6 +1,5 @@
 {% extends "base.html" %} {% block main %}
 <style>
-
     .simulator {
         line-height: 50px;
         display: none;
@@ -11,7 +10,7 @@
     <div class="row">
         <div class="input-group">
 
-            <input id="debug-url" type="text" class="form-control" aria-label="Amount (to the nearest dollar)" placeholder="请输入你要调试的页面url地址">
+            <input id="debug-url" type="text" class="form-control" placeholder="请输入你要调试的页面url地址">
             <span id="gen-qrcode" class="btn btn-info input-group-addon">生成二维码</span>
 
             <!-- <span id="search" class="btn btn-success input-group-addon">搜索</span> -->
@@ -169,6 +168,11 @@
             findPage(JSON.parse(data));
         });
         setTimeout(genQrcode(), 300)
+        $("#debug-url").on("keyup", function (e) {
+            if (e.keyCode == 13) {
+                genQrcode()
+            }
+        })
     </script>
 
 </div>
