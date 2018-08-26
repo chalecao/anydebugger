@@ -183,7 +183,7 @@ var Page = function (_EventEmitter) {
             this.send({ method: 'Runtime.executionContextsCleared', params: {} });
 
             /**
-             * disconnect from devtools frontend if connection was lost for more than 3s
+             * disconnect from devtools frontend if connection was lost for more than 30s
              */
             this.disconnectTimeout = setTimeout(function () {
                 if (_this3.isConnectedToDevice) {
@@ -200,12 +200,12 @@ var Page = function (_EventEmitter) {
                  * remove all listeners
                  */
                 _this3.io.removeAllListeners();
-                delete _this3.socket;
-                delete _this3.ws;
-                _this3.buffer = [];
+                // delete this.socket
+                // delete this.ws
+                // this.buffer = []
 
                 return _this3.emit('disconnect', _this3.uuid);
-            }, 5000);
+            }, 10000);
         }
 
         /**
@@ -407,8 +407,12 @@ var Page = function (_EventEmitter) {
              * check for server side domain handlers
              */
             if (_middleware2.default[msg._domain] && _middleware2.default[msg._domain][msg._method]) {
+                this.log.warn('message from web-inspector-client to middleware handle to ws: ' + msg._domain + '.' + msg._method);
+                // middleware[msg._domain][msg._method].call(this, msg.result)
                 var result = _middleware2.default[msg._domain][msg._method].call(this, msg.result, this.requestList);
-                return this.send({ id: msg.id, result: result });
+                if (result) {
+                    return this.send({ id: msg.id, result: result });
+                }
             }
 
             delete msg._domain;

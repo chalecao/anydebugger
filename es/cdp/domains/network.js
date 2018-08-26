@@ -9,7 +9,6 @@ var _promise = require('babel-runtime/core-js/promise');
 var _promise2 = _interopRequireDefault(_promise);
 
 exports.getResponseBodyData = getResponseBodyData;
-exports.getResponseBody = getResponseBody;
 
 var _zlib = require('zlib');
 
@@ -100,16 +99,9 @@ function getResponseBodyData(_ref) {
  * @param {Object}  params  parameter object containing requestId
  * @return                  response as base64 encoded
  */
-function getResponseBody() {
-    var _this2 = this;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-    }
-
-    getResponseBodyData.apply(this, args).then(function (data) {
-        return _this2.send(data);
-    }, function (e) {
-        return _this2.log.error(e);
-    });
-}
+// export function getResponseBody (...args) {
+//     getResponseBodyData.apply(this, args).then(
+//         (data) => this.send(data),
+//         (e) => this.log.error(e)
+//     )
+// }

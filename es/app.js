@@ -135,6 +135,7 @@ function createApp(port, slient) {
     log.info('app started at port ' + port + '...');
     // Open URL in default browser
     !slient && (0, _bopen2.default)('http://127.0.0.1:' + port);
+    return _index2.default;
 }
 // static file support:
 module.exports = exports['default'];

@@ -44,10 +44,12 @@ var _utils = require('../utils');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var forward2client = "FORWARD";
 /**
  * CDP Contains the actual devtools backend logic. It manages devtools pages and analyses network
  * connection if it is run by a proxy.
  */
+
 var CDPServer = function () {
     function CDPServer(io) {
         (0, _classCallCheck3.default)(this, CDPServer);
@@ -231,22 +233,22 @@ var CDPServer = function () {
                 method = _ref.method,
                 msg = _ref.msg;
 
-            this.log.warn("pass CDP msg to web-inspector-client in domain: " + domain);
+            this.log.warn("pass CDP msg to web-inspector-client in domain: ", domain, method);
             /**
              * check if method has to be executed on serverside
              */
-            // if (domains[domain] && typeof domains[domain][method] === 'function') {
-            //     let result = domains[domain][method].call(page, msg)
+            if (_index2.default[domain] && _index2.default[domain][method]) {
 
-            //     /**
-            //      * some methods are async and broadcast their message on their own
-            //      */
-            //     if (!result) {
-            //         return
-            //     }
+                var result = _index2.default[domain][method].call(page, msg.params);
+                /**
+                 * some methods are async and broadcast their message on their own
+                 */
+                // this.log.warn("-------------", domain, method, result)
 
-            //     return page.send({ id: msg.id, result })
-            // }
+                if (result != forward2client) {
+                    return page.send({ id: msg.id, result: result });
+                }
+            }
 
             /**
              * if not handled on server side sent command to device

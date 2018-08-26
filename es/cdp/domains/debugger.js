@@ -22,7 +22,7 @@ function getScriptSource(param) {
             return null;
         } else {
             // 直接拦截浏览器的请求，修改js脚本后在这里缓存
-            if (this.mockscripts[param.scriptId]) {
+            if (this.mockscripts[param.scriptId] && this.mockscripts[param.scriptId].content) {
                 return { scriptSource: this.mockscripts[param.scriptId].content };
             } else {
                 return forward2client;
@@ -36,7 +36,7 @@ function setScriptSource(_ref) {
         scriptSource = _ref.scriptSource;
 
     this.mockscripts = this.mockscripts || {};
-    if (scriptId) {
+    if (scriptId && scriptSource) {
         this.mockscripts[scriptId] = this.mockscripts[scriptId] || {};
         this.mockscripts[scriptId].content = scriptSource;
     }

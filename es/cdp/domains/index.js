@@ -24,7 +24,11 @@ var _webdriver = require('./webdriver');
 
 var Webdriver = _interopRequireWildcard(_webdriver);
 
+var _debugger = require('./debugger');
+
+var Debugger = _interopRequireWildcard(_debugger);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-exports.default = { Network: Network, Page: Page, Log: Log, Target: Target, Webdriver: Webdriver };
+exports.default = { Network: Network, Page: Page, Log: Log, Target: Target, Webdriver: Webdriver, Debugger: Debugger };
 module.exports = exports['default'];
