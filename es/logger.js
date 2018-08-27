@@ -134,30 +134,9 @@ function Logger(component) {
 
     wrappedLogger.levels = NPM_LEVELS;
 
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
-
-    try {
-        for (var _iterator2 = (0, _getIterator3.default)(NPM_LEVELS), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var level = _step2.value;
-
-            wrappedLogger[level] = function () {};
-        }
-    } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                _iterator2.return();
-            }
-        } finally {
-            if (_didIteratorError2) {
-                throw _iteratorError2;
-            }
-        }
-    }
+    // for (let level of NPM_LEVELS) {
+    //     wrappedLogger[level] = function () { }
+    // }
 
     return wrappedLogger;
 }

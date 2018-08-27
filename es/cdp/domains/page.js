@@ -5,7 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.frameNavigated = frameNavigated;
 exports.frameStartedLoading = frameStartedLoading;
-exports.getResourceContent = getResourceContent;
 
 var _zlib = require('zlib');
 
@@ -69,56 +68,49 @@ function frameStartedLoading(headers) {
  * @param {Object}  params  parameter object containing requestId
  * @return                  response as base64 encoded
  */
-function getResourceContent(_ref) {
-    var _this = this;
+// export function getResourceContent ({ id, params }) {
+//     const request = this.requestList.filter((req) => req.fullUrl === params.url)[0]
 
-    var id = _ref.id,
-        params = _ref.params;
+//     if (!request) {
+//         return { 'error': `Couldn't find request with id ${params.frameId} and url ${params.url}` }
+//     }
 
-    var request = this.requestList.filter(function (req) {
-        return req.fullUrl === params.url;
-    })[0];
+//     /**
+//      * if request in not encoded return immediately
+//      */
+//     if (!hasGzipEncoding(request.request)) {
+//         return { content: request.chunks.join('') }
+//     }
 
-    if (!request) {
-        return { 'error': 'Couldn\'t find request with id ' + params.frameId + ' and url ' + params.url };
-    }
+//     /**
+//      * images are not gzipped
+//      */
+//     if (request.type.toLowerCase() === 'image') {
+//         return this.send({
+//             id,
+//             result: {
+//                 base64Encoded: true,
+//                 content: Buffer.concat(request.chunks).toString('base64')
+//             }
+//         })
+//     }
 
-    /**
-     * if request in not encoded return immediately
-     */
-    if (!(0, _utils.hasGzipEncoding)(request.request)) {
-        return { content: request.chunks.join('') };
-    }
+//     zlib.gunzip(Buffer.concat(request.chunks), (err, body) => {
+//         if (err) {
+//             return this.log.error(err)
+//         }
 
-    /**
-     * images are not gzipped
-     */
-    if (request.type.toLowerCase() === 'image') {
-        return this.send({
-            id: id,
-            result: {
-                base64Encoded: true,
-                content: Buffer.concat(request.chunks).toString('base64')
-            }
-        });
-    }
+//         if (!body) {
+//             this.log.error(new Error('Gzip decoding failed'))
+//             return
+//         }
 
-    _zlib2.default.gunzip(Buffer.concat(request.chunks), function (err, body) {
-        if (err) {
-            return _this.log.error(err);
-        }
-
-        if (!body) {
-            _this.log.error(new Error('Gzip decoding failed'));
-            return;
-        }
-
-        return _this.send({
-            id: id,
-            result: {
-                base64Encoded: false,
-                body: body.toString()
-            }
-        });
-    });
-}
+//         return this.send({
+//             id,
+//             result: {
+//                 base64Encoded: false,
+//                 body: body.toString()
+//             }
+//         })
+//     })
+// }
