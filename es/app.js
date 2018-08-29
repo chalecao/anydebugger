@@ -46,10 +46,6 @@ var _index = require('./cdp/index');
 
 var _index2 = _interopRequireDefault(_index);
 
-var _bopen = require('bopen');
-
-var _bopen2 = _interopRequireDefault(_bopen);
-
 var _staticFiles = require('./static-files');
 
 var _staticFiles2 = _interopRequireDefault(_staticFiles);
@@ -133,8 +129,7 @@ function createApp(port, debuglog) {
 
     server.listen(port);
     log.info('app started at port ' + port + '...');
-    // Open URL in default browser
-    (0, _bopen2.default)('http://127.0.0.1:' + port);
+
     return _index2.default;
 }
 // static file support:
