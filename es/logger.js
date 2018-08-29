@@ -4,13 +4,13 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _getIterator2 = require('babel-runtime/core-js/get-iterator');
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
 var _stringify = require('babel-runtime/core-js/json/stringify');
 
 var _stringify2 = _interopRequireDefault(_stringify);
+
+var _getIterator2 = require('babel-runtime/core-js/get-iterator');
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
 
 exports.default = Logger;
 
@@ -54,7 +54,14 @@ if (isLogging) {
 
 _npmlog2.default.addLevel('debug', 4500, { fg: 'black', bg: 'white' }, 'debug');
 
-function Logger(component) {
+var disableLog = false;
+
+function Logger(component, debuglog) {
+    if (!debuglog) {
+        disableLog = true;
+    } else {
+        disableLog = false;
+    }
     var componentLogFile = void 0;
     var wrappedLogger = {};
     var prefix = _package2.default.name + (component ? ':' + component : '');
@@ -133,10 +140,32 @@ function Logger(component) {
     }
 
     wrappedLogger.levels = NPM_LEVELS;
+    if (disableLog) {
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
 
-    // for (let level of NPM_LEVELS) {
-    //     wrappedLogger[level] = function () { }
-    // }
+        try {
+            for (var _iterator2 = (0, _getIterator3.default)(NPM_LEVELS), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                var level = _step2.value;
+
+                wrappedLogger[level] = function () {};
+            }
+        } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                    _iterator2.return();
+                }
+            } finally {
+                if (_didIteratorError2) {
+                    throw _iteratorError2;
+                }
+            }
+        }
+    }
 
     return wrappedLogger;
 }

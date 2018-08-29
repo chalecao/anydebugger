@@ -56,11 +56,11 @@ var _staticFiles2 = _interopRequireDefault(_staticFiles);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function createApp(port, slient) {
+function createApp(port, debuglog) {
     var _this = this;
 
     var app = new _koa2.default();
-    var log = (0, _logger2.default)();
+    var log = (0, _logger2.default)("app", debuglog);
     var isProduction = process.env.NODE_ENV === 'production';
 
     // log request URL:
@@ -134,7 +134,7 @@ function createApp(port, slient) {
     server.listen(port);
     log.info('app started at port ' + port + '...');
     // Open URL in default browser
-    !slient && (0, _bopen2.default)('http://127.0.0.1:' + port);
+    (0, _bopen2.default)('http://127.0.0.1:' + port);
     return _index2.default;
 }
 // static file support:

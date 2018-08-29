@@ -33,14 +33,14 @@ _opts2.default.parse([{
     value: true,
     required: false
 }, {
-    short: "s",
-    long: "slient",
-    description: "start silently, will not open browser.",
+    short: "d",
+    long: "debug",
+    description: "Debug mode, display log in console",
     value: true,
     required: false
 }], true);
 
 var port = _opts2.default.get('port') || 8888;
-var slient = _opts2.default.get('slient') || false;
+var debug = _opts2.default.get('debug') || false;
 
-(0, _app2.default)(port, slient);
+(0, _app2.default)(port, debug);
