@@ -11,7 +11,7 @@
     "babel": "babel src/ -d es/",
     "server": "node --use_strict es/bin.js",
     "start": "npm run babel && npm run server --debug",
-    "cp": "cp -r ./es/ /Users/chalecao/personal/adev/node_modules/anydebugger/es/"
+    "cp": "cp -r ./es/ /Users/chalecao/personal/adev/node_modules/anydebugger/es/ && cp -r ./views/ /Users/chalecao/personal/adev/node_modules/anydebugger/views/"
   },
   "keywords": [
     "web debugger, mock data"

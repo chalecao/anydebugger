@@ -87,7 +87,7 @@ var Page = function (_EventEmitter) {
      * @param {*} description
      * @param {*} metadata
      */
-    function Page(io, uuid, hostname, url, title, description, metadata) {
+    function Page(io, uuid, hostname, url, title, description, metadata, connectcb) {
         (0, _classCallCheck3.default)(this, Page);
 
         var _this = (0, _possibleConstructorReturn3.default)(this, (Page.__proto__ || (0, _getPrototypeOf2.default)(Page)).call(this));
@@ -104,6 +104,7 @@ var Page = function (_EventEmitter) {
         _this.isConnectedToDevtoolsFrontend = false;
         _this.domains = [];
         _this.buffer = [];
+        _this.bufferSocket = [];
         _this.cssContent = [];
 
         // switch channel for web inspector client connect
@@ -114,6 +115,8 @@ var Page = function (_EventEmitter) {
             perMessageDeflate: false,
             noServer: true
         });
+
+        _this.connectcb = connectcb;
         return _this;
     }
     /**
@@ -127,6 +130,8 @@ var Page = function (_EventEmitter) {
             var _this2 = this;
 
             this.log.warn('Connected by web-inspector-client with page id ' + this.uuid);
+            // emit /json to show in page
+            this.connectcb();
 
             this.socket = socket;
             this.socket.on('result', this.send.bind(this));
@@ -162,6 +167,9 @@ var Page = function (_EventEmitter) {
             this.socket.on('debug', function (msg) {
                 return _this2.log.http('debug web inspector client: ' + msg);
             });
+            if (this.bufferSocket.length) {
+                this.flushBufferSocket();
+            }
         }
 
         /**
@@ -441,10 +449,24 @@ var Page = function (_EventEmitter) {
             var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
             if (!this.socket) {
-                return this.log.error('no socket found to trigger event');
+                this.bufferSocket.push({
+                    domain: domain, params: params
+                });
+                this.log.error('no socket found to trigger event, buffer msg');
+                return;
             }
 
             this.socket.emit(domain, params);
+        }
+    }, {
+        key: 'flushBufferSocket',
+        value: function flushBufferSocket() {
+            var _this9 = this;
+
+            this.bufferSocket.forEach(function (msg) {
+                _this9.socket.emit(msg.domain, msg.params);
+            });
+            this.bufferSocket = [];
         }
 
         /**

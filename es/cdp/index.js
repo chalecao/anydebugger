@@ -108,13 +108,12 @@ var CDPServer = function () {
             var registeredPage = this.pages.find(function (page) {
                 return page.uuid == params.uuid;
             });
-            var page = {};
+            var page = null;
             if (!registeredPage) {
                 this.log.info('Create a new page with uuid "' + params.uuid + '"');
 
-                page = new _page2.default(this.io, params.uuid, params.hostname, _url2.default.parse(params.url), params.title, params.description, params.metadata);
+                page = new _page2.default(this.io, params.uuid, params.hostname, _url2.default.parse(params.url), params.title, params.description, params.metadata, this.emitPage.bind(this));
                 this.pages.push(page);
-                this.emitPage();
 
                 /**
                  * remove page if disconnected from devtools frontend
@@ -132,7 +131,6 @@ var CDPServer = function () {
             } else {
                 this.log.info('Page with uuid "' + params.uuid + '" already exists');
                 page = registeredPage;
-                this.emitPage();
             }
 
             /**
@@ -141,7 +139,6 @@ var CDPServer = function () {
             page.cssContent = [];
 
             page.frameStartedLoading();
-            return page;
         }
     }, {
         key: 'emitPage',
