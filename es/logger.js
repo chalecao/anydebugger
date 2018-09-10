@@ -57,10 +57,8 @@ _npmlog2.default.addLevel('debug', 4500, { fg: 'black', bg: 'white' }, 'debug');
 var disableLog = false;
 
 function Logger(component, debuglog) {
-    if (!debuglog) {
+    if (debuglog == false) {
         disableLog = true;
-    } else {
-        disableLog = false;
     }
     var componentLogFile = void 0;
     var wrappedLogger = {};

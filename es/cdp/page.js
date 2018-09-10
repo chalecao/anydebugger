@@ -4,6 +4,14 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
 var _stringify = require('babel-runtime/core-js/json/stringify');
 
 var _stringify2 = _interopRequireDefault(_stringify);
@@ -132,6 +140,12 @@ var Page = function (_EventEmitter) {
             this.log.warn('Connected by web-inspector-client with page id ' + this.uuid);
             // emit /json to show in page
             this.connectcb();
+            /**
+             * clear disconnectTimeout and disconnectClientTimeout when connection got connected
+             */
+            if (this.disconnectTimeout) {
+                clearTimeout(this.disconnectTimeout);
+            }
 
             this.socket = socket;
             this.socket.on('result', this.send.bind(this));
@@ -157,11 +171,16 @@ var Page = function (_EventEmitter) {
                 }
 
                 /**
-                 * clear timeout when connection got disconnected
+                 * clear disconnectTimeout and disconnectClientTimeout when connection got connected
                  */
-                if (_this2.disconnectTimeout) {
-                    clearTimeout(_this2.disconnectTimeout);
-                }
+                // if (this.disconnectTimeout) {
+                // clearTimeout(this.disconnectTimeout)
+                // }
+                // setInterval(() => {
+                //     this.socket.emit("heartbeat", {})
+                //     this.log.warn("heartbeat");
+                // }, 3000)
+
             });
             this.socket.on('disconnect', this.disconnect.bind(this));
             this.socket.on('debug', function (msg) {
@@ -181,19 +200,19 @@ var Page = function (_EventEmitter) {
         value: function disconnect() {
             var _this3 = this;
 
-            this.log.warn('Disconnected from page ' + this.uuid);
-            this.isConnectedToDevice = false;
-
-            /**
-             * clear execution context
-             */
-            this.send({ method: 'Runtime.executionContextDestroyed', params: { executionContextId: 1 } });
-            this.send({ method: 'Runtime.executionContextsCleared', params: {} });
+            this.log.warn('Disconnected from page ' + this.uuid + ', wait 30s if no reconnect');
 
             /**
              * disconnect from devtools frontend if connection was lost for more than 30s
              */
             this.disconnectTimeout = setTimeout(function () {
+                _this3.isConnectedToDevice = false;
+                /**
+                 * clear execution context
+                 */
+                _this3.send({ method: 'Runtime.executionContextDestroyed', params: { executionContextId: 1 } });
+                _this3.send({ method: 'Runtime.executionContextsCleared', params: {} });
+
                 if (_this3.isConnectedToDevice) {
                     // page reconnected (e.g. on page load)
                     return;
@@ -213,7 +232,7 @@ var Page = function (_EventEmitter) {
                 // this.buffer = []
 
                 return _this3.emit('disconnect', _this3.uuid);
-            }, 10000);
+            }, 30000);
         }
 
         /**
@@ -390,54 +409,95 @@ var Page = function (_EventEmitter) {
 
     }, {
         key: 'send',
-        value: function send(msg) {
-            var _this8 = this;
+        value: function () {
+            var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(msg) {
+                var _this8 = this;
 
-            var flushBuffer = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+                var flushBuffer = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+                var result, msgString;
+                return _regenerator2.default.wrap(function _callee$(_context) {
+                    while (1) {
+                        switch (_context.prev = _context.next) {
+                            case 0:
+                                /**
+                                * clear disconnectTimeout and disconnectClientTimeout when connection got connected
+                                */
+                                if (this.disconnectTimeout) {
+                                    clearTimeout(this.disconnectTimeout);
+                                }
 
-            if (!this.ws) {
-                this.log.http('Buffer debugger message: ' + (0, _stringify2.default)(msg).slice(0, 100));
-                this.buffer.push(msg);
-                return;
+                                if (this.ws) {
+                                    _context.next = 5;
+                                    break;
+                                }
+
+                                this.log.http('Buffer debugger message: ' + (0, _stringify2.default)(msg).slice(0, 100));
+                                this.buffer.push(msg);
+                                return _context.abrupt('return');
+
+                            case 5:
+                                if (!(flushBuffer && this.buffer.length)) {
+                                    _context.next = 8;
+                                    break;
+                                }
+
+                                this.flushMsgBuffer();
+                                return _context.abrupt('return', process.nextTick(function () {
+                                    return _this8.send(msg, false);
+                                }));
+
+                            case 8:
+                                if (!(_middleware2.default[msg._domain] && _middleware2.default[msg._domain][msg._method])) {
+                                    _context.next = 14;
+                                    break;
+                                }
+
+                                this.log.warn('message from web-inspector-client to middleware handle to ws: ' + msg._domain + '.' + msg._method);
+                                // middleware[msg._domain][msg._method].call(this, msg.result)
+                                _context.next = 12;
+                                return _middleware2.default[msg._domain][msg._method].call(this, msg.result, this.requestList);
+
+                            case 12:
+                                result = _context.sent;
+                                return _context.abrupt('return', this.send({ id: msg.id, result: result }));
+
+                            case 14:
+
+                                delete msg._domain;
+                                delete msg._method;
+
+                                msgString = (0, _stringify2.default)(msg);
+
+                                this.log.debug('message from web-inspector-client to ws: ' + msgString.slice(0, 1000));
+
+                                /**
+                                 * broadcast to clients that have open socket connection
+                                 */
+
+                                if (!(this.ws.readyState !== _ws2.default.OPEN)) {
+                                    _context.next = 20;
+                                    break;
+                                }
+
+                                return _context.abrupt('return');
+
+                            case 20:
+                                return _context.abrupt('return', this.ws.send(msgString));
+
+                            case 21:
+                            case 'end':
+                                return _context.stop();
+                        }
+                    }
+                }, _callee, this);
+            }));
+
+            function send(_x) {
+                return _ref.apply(this, arguments);
             }
 
-            /**
-             * check if buffer contains unsend messages
-             */
-            if (flushBuffer && this.buffer.length) {
-                this.flushMsgBuffer();
-                return process.nextTick(function () {
-                    return _this8.send(msg, false);
-                });
-            }
-
-            /**
-             * check for server side domain handlers
-             */
-            if (_middleware2.default[msg._domain] && _middleware2.default[msg._domain][msg._method]) {
-                this.log.warn('message from web-inspector-client to middleware handle to ws: ' + msg._domain + '.' + msg._method);
-                // middleware[msg._domain][msg._method].call(this, msg.result)
-                var result = _middleware2.default[msg._domain][msg._method].call(this, msg.result, this.requestList);
-                if (result) {
-                    return this.send({ id: msg.id, result: result });
-                }
-            }
-
-            delete msg._domain;
-            delete msg._method;
-
-            var msgString = (0, _stringify2.default)(msg);
-            this.log.debug('message from web-inspector-client to ws: ' + msgString.slice(0, 1000));
-
-            /**
-             * broadcast to clients that have open socket connection
-             */
-            if (this.ws.readyState !== _ws2.default.OPEN) {
-                return;
-            }
-
-            return this.ws.send(msgString);
-        }
+            return send;
+        }()
 
         /**
          * trigger event to happen on device, send msg to web inspector client
