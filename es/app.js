@@ -89,7 +89,12 @@ function createApp(port, debuglog) {
         };
     }());
 
-    app.use((0, _staticFiles2.default)('/app/', "/../node_modules/chrome-devtools-frontend/front_end/"));
+    if (__dirname.match("node_modules")) {
+        app.use((0, _staticFiles2.default)('/app/', "/../../chrome-devtools-frontend/front_end/"));
+    } else {
+        app.use((0, _staticFiles2.default)('/app/', "/../node_modules/chrome-devtools-frontend/front_end/"));
+    }
+
     app.use((0, _staticFiles2.default)('/static/', "/../static/"));
 
     // parse request body:
